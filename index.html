@@ -555,18 +555,19 @@
      * 使用前請先設定 Firebase Realtime Database
      * 1. 到 Firebase 建立專案
      * 2. 建立 Realtime Database
-     * 3. 將下方 firebaseConfig 改成你的專案設定
+     * 3. 已依照你的 Firebase 畫面填入 firebaseConfig
+     * 4. 如果 Realtime Database 的網址不是 default-rtdb.firebaseio.com，請改 databaseURL 那一行
      * 4. 四台平板打開同一網址，輸入同一房間代碼即可同步
      ************************************************************/
-   const firebaseConfig = {
-  apiKey: "AIzaSyD61F18qABe60KSUa1TTEqEmgpd2o12neU",
-  authDomain: "pregnancy-undercover-game.firebaseapp.com",
-  projectId: "pregnancy-undercover-game",
-  storageBucket: "pregnancy-undercover-game.firebasestorage.app",
-  messagingSenderId: "773373138306",
-  appId: "1:773373138306:web:7c3d4ed7e45e44bb6deb9b"
-};
-
+    const firebaseConfig = {
+      apiKey: "AIzaSyD6lF18qABe6OKSUa1TTEqEmgpd2o12neU",
+      authDomain: "pregnancy-undercover-game.firebaseapp.com",
+      databaseURL: "https://pregnancy-undercover-game-default-rtdb.firebaseio.com",
+      projectId: "pregnancy-undercover-game",
+      storageBucket: "pregnancy-undercover-game.firebasestorage.app",
+      messagingSenderId: "773373138306",
+      appId: "1:773373138306:web:7c3d4ed7e45e44bb6deb9b"
+    };
 
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import {
