@@ -725,6 +725,12 @@
         game: null,
         votes: {},
         result: null,
+
+        // usedCivilianSynIds 會記錄「平民題目」已經出過哪些症狀。
+        // 重新開始會保留這個紀錄；清空房間才會全部歸零。
+        usedCivilianSynIds: [],
+        roundNumber: 0,
+
         updatedAt: Date.now()
       };
     }
@@ -815,9 +821,31 @@
       return arr[Math.floor(Math.random() * arr.length)];
     }
 
-    function makeAssignment() {
+    function allSymptomIds() {
+      return Object.keys(SYMPTOMS).map(Number);
+    }
+
+    function normalizeUsedList(list) {
+      if (!Array.isArray(list)) return [];
+      const valid = new Set(allSymptomIds());
+      return [...new Set(list.map(Number).filter((id) => valid.has(id)))];
+    }
+
+    function getAvailableCivilianIds(usedCivilianSynIds) {
+      const used = new Set(normalizeUsedList(usedCivilianSynIds));
+      return allSymptomIds().filter((id) => !used.has(id));
+    }
+
+    function makeAssignment(usedCivilianSynIds = []) {
       const playerNums = ["1", "2", "3", "4"];
-      const civilianSynId = Number(randomItem(Object.keys(SYMPTOMS)));
+
+      // 優先從「還沒當過平民題目」的症狀中抽。
+      // 如果 9 種都出過了，就自動開啟新一輪，重新從 9 種裡隨機抽。
+      let available = getAvailableCivilianIds(usedCivilianSynIds);
+      const cycleReset = available.length === 0;
+      if (cycleReset) available = allSymptomIds();
+
+      const civilianSynId = Number(randomItem(available));
       const undercoverSynId = Number(randomItem(PAIRS[civilianSynId]));
       const undercoverPlayer = randomItem(playerNums);
 
@@ -835,6 +863,7 @@
         civilianSynId,
         undercoverSynId,
         undercoverPlayer,
+        cycleReset,
         createdAt: Date.now()
       };
     }
@@ -922,10 +951,19 @@
         state.players = state.players || {};
         const ready = Object.keys(state.players).length === 4;
         if ((state.phase || "lobby") === "lobby" && ready) {
+          const previousUsed = normalizeUsedList(state.usedCivilianSynIds || []);
+          const assignment = makeAssignment(previousUsed);
+
+          // 如果上一輪 9 種都用完了，本輪會自動洗牌重來。
+          // 新週期的第一題也要立刻記錄為已使用。
+          const baseUsed = assignment.cycleReset ? [] : previousUsed;
+
           state.phase = "playing";
-          state.game = makeAssignment();
+          state.game = assignment;
           state.votes = {};
           state.result = null;
+          state.usedCivilianSynIds = [...baseUsed, assignment.civilianSynId];
+          state.roundNumber = Number(state.roundNumber || 0) + 1;
           state.updatedAt = Date.now();
         }
         return state;
@@ -1005,7 +1043,26 @@
     }
 
     async function resetGame() {
-      const ok = confirm("確定要重新開始嗎？所有玩家會回到 Player 選擇畫面。");
+      const ok = confirm("確定要重新開始嗎？所有玩家會回到 Player 選擇畫面。\n\n注意：已出過的平民題目紀錄會保留，下一輪會優先抽還沒出過的題目。");
+      if (!ok) return;
+
+      await updateRoom((state) => {
+        const used = normalizeUsedList(state.usedCivilianSynIds || []);
+        const roundNumber = Number(state.roundNumber || 0);
+        return {
+          ...emptyRoom(),
+          usedCivilianSynIds: used,
+          roundNumber,
+          updatedAt: Date.now()
+        };
+      });
+
+      localStorage.removeItem("pregnancy-undercover-my-player-" + roomId);
+      showToast("已重新開始，出題紀錄已保留");
+    }
+
+    async function clearRoom() {
+      const ok = confirm("確定要清空這個房間嗎？\n\n這會同時清除玩家、投票、結果，以及已出過題目的紀錄。");
       if (!ok) return;
 
       if (hasFirebaseConfig) {
@@ -1015,13 +1072,7 @@
       }
 
       localStorage.removeItem("pregnancy-undercover-my-player-" + roomId);
-      showToast("已重新開始");
-    }
-
-    async function clearRoom() {
-      const ok = confirm("確定要清空這個房間嗎？適合在有人卡住或課堂重新開始時使用。");
-      if (!ok) return;
-      await resetGame();
+      showToast("已清空房間與出題紀錄");
     }
 
     function render() {
@@ -1094,12 +1145,28 @@
         <div class="panel">
           <h2 style="margin:0 0 8px; font-size:28px;">請選擇你的 Player</h2>
           <p class="subtitle">被選走的 Player 會在所有平板上變暗，不能再點選。</p>
+          ${renderQuestionProgress(state)}
           <div class="player-grid">
             ${[1,2,3,4].map((n) => renderPlayerButton(n, players)).join("")}
           </div>
           <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
             <button class="btn secondary" data-action="clearRoom">清空房間</button>
           </div>
+        </div>
+      `;
+    }
+
+    function renderQuestionProgress(state) {
+      const used = normalizeUsedList(state.usedCivilianSynIds || []);
+      const usedInCycle = used.length;
+      const nextMessage = usedInCycle >= 9
+        ? "9 種平民題目都已出完，下一輪會自動重新洗牌。"
+        : `本週期已出過 ${usedInCycle}/9 種平民題目，下一輪會優先抽剩下 ${9 - usedInCycle} 種。`;
+
+      return `
+        <div class="notice" style="margin-top:14px;">
+          <b>出題規則：</b>${nextMessage}<br>
+          <span class="small">重新開始會保留出題紀錄；清空房間才會把紀錄歸零。臥底題目仍會依相近症狀隨機搭配。</span>
         </div>
       `;
     }
@@ -1235,7 +1302,9 @@
 
           <div class="notice">
             規則：只要臥底得票數為最高或並列最高，就代表一般玩家成功抓到臥底。<br>
-            可以請學生說明：兩個症狀哪裡相似？哪裡不同？身邊的人可以怎麼支持孕婦？
+            可以請學生說明：兩個症狀哪裡相似？哪裡不同？身邊的人可以怎麼支持孕婦？<br>
+            <br>
+            <b>下一輪出題：</b>${renderNextQuestionText(state)}
           </div>
 
           <div class="action-area">
@@ -1261,6 +1330,12 @@
           <p class="subtitle">這台裝置沒有選擇 Player，因此不能投票。</p>
         </div>
       `;
+    }
+
+    function renderNextQuestionText(state) {
+      const used = normalizeUsedList(state.usedCivilianSynIds || []);
+      if (used.length >= 9) return "9 種平民題目都已出完，按「重新開始」後，下一輪會自動洗牌重來。";
+      return `目前本週期已出過 ${used.length}/9 種平民題目，按「重新開始」後會優先抽還沒出過的題目。`;
     }
 
     function renderDialogue() {
