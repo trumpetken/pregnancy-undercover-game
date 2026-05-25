@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>孕期症狀誰是臥底</title>
+  <style>
+    :root {
+      --bg: #fff7ed;
+      --card: #ffffff;
+      --text: #2f241f;
+      --muted: #7c6f64;
+      --primary: #ea580c;
+      --primary-dark: #c2410c;
+      --soft: #fed7aa;
+      --soft-2: #ffedd5;
+      --danger: #dc2626;
+      --success: #16a34a;
+      --shadow: 0 18px 50px rgba(124, 45, 18, .18);
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(251, 146, 60, .25), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(253, 186, 116, .28), transparent 35%),
+        var(--bg);
+      color: var(--text);
+    }
+
+    button, input {
+      font-family: inherit;
+    }
+
+    .app {
+      width: min(980px, 100%);
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .title {
+      margin: 0;
+      font-size: clamp(24px, 5vw, 42px);
+      line-height: 1.1;
+      letter-spacing: .04em;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: rgba(255,255,255,.72);
+      border: 1px solid rgba(251, 146, 60, .35);
+      color: var(--primary-dark);
+      font-weight: 800;
+      white-space: nowrap;
+      box-shadow: 0 8px 22px rgba(124, 45, 18, .08);
+    }
+
+    .panel {
+      background: rgba(255,255,255,.86);
+      border: 1px solid rgba(251, 146, 60, .35);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(18px, 4vw, 32px);
+      backdrop-filter: blur(12px);
+    }
+
+    .room-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      border: 2px solid rgba(251, 146, 60, .35);
+      border-radius: 18px;
+      padding: 14px 16px;
+      font-size: 18px;
+      background: #fff;
+      outline: none;
+      color: var(--text);
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--primary);
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 18px;
+      padding: 14px 18px;
+      background: var(--primary);
+      color: white;
+      font-weight: 900;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(234, 88, 12, .25);
+      transition: transform .12s ease, opacity .12s ease, background .12s ease;
+    }
+
+    .btn:active {
+      transform: scale(.97);
+    }
+
+    .btn.secondary {
+      background: #fff;
+      color: var(--primary-dark);
+      border: 2px solid rgba(251, 146, 60, .4);
+      box-shadow: none;
+    }
+
+    .btn.danger {
+      background: var(--danger);
+      box-shadow: 0 10px 24px rgba(220, 38, 38, .22);
+    }
+
+    .btn.success {
+      background: var(--success);
+      box-shadow: 0 10px 24px rgba(22, 163, 74, .22);
+    }
+
+    .btn:disabled,
+    .player-btn.disabled {
+      opacity: .35;
+      cursor: not-allowed;
+      filter: grayscale(.75);
+      transform: none;
+    }
+
+    .player-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .player-btn {
+      border: 0;
+      border-radius: 26px;
+      min-height: 154px;
+      background: linear-gradient(160deg, #ffffff, var(--soft-2));
+      color: var(--text);
+      box-shadow: 0 14px 30px rgba(124, 45, 18, .13);
+      border: 2px solid rgba(251, 146, 60, .28);
+      cursor: pointer;
+      transition: transform .16s ease, box-shadow .16s ease, border .16s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 1000;
+    }
+
+    .player-btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(234, 88, 12, .68);
+      box-shadow: 0 18px 34px rgba(124, 45, 18, .18);
+    }
+
+    .player-num {
+      font-size: clamp(24px, 5vw, 38px);
+      letter-spacing: .03em;
+    }
+
+    .player-status {
+      margin-top: 10px;
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .occupied {
+      background: linear-gradient(160deg, #e7e5e4, #d6d3d1);
+      color: #78716c;
+      box-shadow: none;
+    }
+
+    .my-choice {
+      outline: 4px solid rgba(22, 163, 74, .28);
+      border-color: var(--success);
+    }
+
+    .exit {
+      position: fixed;
+      right: 16px;
+      top: 14px;
+      z-index: 20;
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 16px;
+      background: #fff;
+      color: var(--danger);
+      font-weight: 1000;
+      box-shadow: 0 12px 28px rgba(124, 45, 18, .16);
+      cursor: pointer;
+    }
+
+    .big-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 62vh;
+      text-align: center;
+      gap: 14px;
+    }
+
+    .waiting-number {
+      font-size: clamp(66px, 18vw, 150px);
+      font-weight: 1000;
+      color: var(--primary);
+      line-height: 1;
+      text-shadow: 0 10px 28px rgba(234, 88, 12, .2);
+    }
+
+    .progress-dots {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    .dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      background: #d6d3d1;
+    }
+
+    .dot.on {
+      background: var(--primary);
+    }
+
+    .card-wrap {
+      display: grid;
+      grid-template-columns: minmax(280px, 440px) 1fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .symptom-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 520px;
+      border-radius: 32px;
+      background: linear-gradient(180deg, #fff, #ffedd5);
+      border: 3px solid rgba(251, 146, 60, .38);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .img-box {
+      position: relative;
+      flex: 1;
+      min-height: 360px;
+      background: #fff7ed;
+      border-bottom: 1px solid rgba(251, 146, 60, .24);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      padding: 14px;
+    }
+
+    .img-fallback {
+      display: none;
+      width: 92%;
+      height: 88%;
+      border: 3px dashed rgba(234, 88, 12, .35);
+      border-radius: 28px;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: var(--primary-dark);
+      font-weight: 900;
+      text-align: center;
+      padding: 20px;
+      background: rgba(255,255,255,.72);
+    }
+
+    .magnifier {
+      position: absolute;
+      right: 14px;
+      top: 14px;
+      width: 62px;
+      height: 62px;
+      border-radius: 999px;
+      border: 0;
+      background: rgba(255,255,255,.94);
+      color: var(--primary-dark);
+      font-size: 30px;
+      font-weight: 1000;
+      box-shadow: 0 10px 26px rgba(124, 45, 18, .2);
+      cursor: pointer;
+    }
+
+    .symptom-name {
+      padding: 22px;
+      text-align: center;
+      font-size: clamp(28px, 6vw, 44px);
+      font-weight: 1000;
+      letter-spacing: .06em;
+      color: var(--primary-dark);
+    }
+
+    .info-box {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .notice {
+      border-radius: 22px;
+      background: rgba(255,255,255,.88);
+      border: 1px solid rgba(251, 146, 60, .28);
+      padding: 16px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-weight: 650;
+    }
+
+    .hidden-role {
+      border-radius: 22px;
+      background: #fff;
+      border: 2px dashed rgba(251, 146, 60, .42);
+      padding: 16px;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    .action-area {
+      margin-top: auto;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .voting-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .vote-btn {
+      min-height: 112px;
+      font-size: 26px;
+      border-radius: 24px;
+    }
+
+    .result-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 10px;
+      margin: 14px 0;
+    }
+
+    .result-table td {
+      background: #fff;
+      padding: 14px;
+      font-weight: 850;
+      border-top: 1px solid rgba(251, 146, 60, .22);
+      border-bottom: 1px solid rgba(251, 146, 60, .22);
+    }
+
+    .result-table td:first-child {
+      border-radius: 16px 0 0 16px;
+      border-left: 1px solid rgba(251, 146, 60, .22);
+    }
+
+    .result-table td:last-child {
+      border-radius: 0 16px 16px 0;
+      border-right: 1px solid rgba(251, 146, 60, .22);
+      text-align: right;
+      color: var(--primary-dark);
+    }
+
+    .winner {
+      font-size: clamp(32px, 7vw, 62px);
+      line-height: 1.12;
+      margin: 16px 0;
+      color: var(--primary-dark);
+      font-weight: 1000;
+    }
+
+    .dialogue-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(41, 37, 36, .45);
+      z-index: 50;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .dialogue {
+      width: min(860px, 100%);
+      min-height: 220px;
+      border-radius: 30px;
+      background: rgba(255,255,255,.97);
+      box-shadow: 0 24px 80px rgba(0,0,0,.24);
+      border: 3px solid rgba(251, 146, 60, .45);
+      padding: 22px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .dialogue-title {
+      font-weight: 1000;
+      color: var(--primary-dark);
+      font-size: 24px;
+      margin-bottom: 12px;
+      padding-right: 52px;
+    }
+
+    .dialogue-text {
+      font-size: clamp(22px, 4.3vw, 34px);
+      line-height: 1.65;
+      font-weight: 850;
+      min-height: 100px;
+    }
+
+    .dialogue-hint {
+      margin-top: 10px;
+      text-align: right;
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .close-x {
+      position: absolute;
+      right: 18px;
+      top: 18px;
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 0;
+      background: var(--danger);
+      color: white;
+      font-size: 24px;
+      font-weight: 1000;
+      cursor: pointer;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .warning {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      border-radius: 18px;
+      padding: 12px 14px;
+      margin: 12px 0;
+      line-height: 1.6;
+      font-weight: 800;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%);
+      background: rgba(41, 37, 36, .95);
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 999px;
+      z-index: 90;
+      font-weight: 900;
+      box-shadow: 0 12px 26px rgba(0,0,0,.22);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease, bottom .2s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      bottom: 28px;
+    }
+
+    @media (max-width: 780px) {
+      .topbar {
+        flex-direction: column;
+      }
+
+      .player-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .player-btn {
+        min-height: 128px;
+      }
+
+      .card-wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .symptom-card {
+        min-height: 480px;
+      }
+
+      .room-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="app"></div>
+  <div id="toast" class="toast"></div>
+
+  <script type="module">
+    /************************************************************
+     * 使用前請先設定 Firebase Realtime Database
+     * 1. 到 Firebase 建立專案
+     * 2. 建立 Realtime Database
+     * 3. 將下方 firebaseConfig 改成你的專案設定
+     * 4. 四台平板打開同一網址，輸入同一房間代碼即可同步
+     ************************************************************/
+    const firebaseConfig = {
+      apiKey: "PASTE_YOUR_API_KEY",
+      authDomain: "PASTE_YOUR_PROJECT.firebaseapp.com",
+      databaseURL: "https://PASTE_YOUR_PROJECT-default-rtdb.firebaseio.com",
+      projectId: "PASTE_YOUR_PROJECT",
+      storageBucket: "PASTE_YOUR_PROJECT.appspot.com",
+      messagingSenderId: "PASTE_YOUR_SENDER_ID",
+      appId: "PASTE_YOUR_APP_ID"
+    };
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getDatabase,
+      ref,
+      onValue,
+      set,
+      remove,
+      runTransaction,
+      get
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    const hasFirebaseConfig =
+      firebaseConfig.apiKey &&
+      !firebaseConfig.apiKey.startsWith("PASTE_") &&
+      firebaseConfig.databaseURL &&
+      !firebaseConfig.databaseURL.includes("PASTE_");
+
+    const SYMPTOMS = {
+      1: {
+        img: "syn1.png",
+        name: "乳房脹痛",
+        lines: [
+          "懷孕沒多久，我的胸部就開始又脹又痛，連碰到都覺得刺痛，更別說穿內衣了！",
+          "走路稍微晃一下都不舒服，睡覺側躺更是折磨……最誇張的是有一次洗澡，水柱沖到胸口，痛到我直接倒吸一口氣！",
+          "醫生說這是因為賀爾蒙變化，乳腺開始發育，但我完全沒想到會這麼敏感…希望過幾個月能緩解啊！"
+        ]
+      },
+      2: {
+        img: "syn2.png",
+        name: "頻尿",
+        lines: [
+          "我剛開始懷孕時就有頻尿的問題了，那個時候很誇張，一個晚上可以起來4~7次，真的很打斷睡眠。",
+          "那時候甚至必須和先生分房睡，因為起床尿尿的時候會吵到他。",
+          "現在是第三孕期，我還多了一個狀況，就是尿不乾淨。",
+          "就明明我尿了也擦了，結果站起來又尿了兩滴...那種感覺。"
+        ]
+      },
+      3: {
+        img: "syn3.png",
+        name: "孕吐",
+        lines: [
+          "懷孕才一個月，我就開始瘋狂孕吐。什麼「晨吐」？根本是全天候在吐！",
+          "聞到油煙味、咖啡味，甚至洗髮精的香味都讓我想衝去廁所。",
+          "最慘的是老公帶我吃壽喜燒，結果吃沒幾口就全吐了……浪費錢又折磨自己！",
+          "醫生說三個月後會好轉，但現在連喝水都想吐，真的熬不下去了！"
+        ]
+      },
+      4: {
+        img: "syn4.png",
+        name: "妊娠糖尿病",
+        lines: [
+          "在我懷孕進入第24週時，醫師請我空腹喝一杯糖水，要進行妊娠糖尿病檢測。",
+          "明明我懷孕前沒有糖尿病病史，卻在檢查後診斷出有糖尿病。",
+          "醫師說懷孕期間曾患有妊娠糖尿病的女性，孩子可能會因過大而難以生產。",
+          "而且生產後還有高機率率會發展成糖尿病，讓我嚇得不輕，只好配合醫師的處方和飲食來調整了。"
+        ]
+      },
+      5: {
+        img: "syn5.png",
+        name: "腰酸背痛",
+        lines: [
+          "進入懷孕第20幾週後，我的肚子逐漸大了起來。",
+          "我感覺似乎壓迫到了我屁股和大腿連接處的神經，痛到我甚至會跛腳走路。",
+          "問醫生怎麼辦，醫生卻說：「等妳小孩出生就會好了...」",
+          "么壽喔～到卸貨還有很久涅..."
+        ]
+      },
+      6: {
+        img: "syn6.png",
+        name: "下肢水腫",
+        lines: [
+          "我在進到第二孕期後，還有一個困擾就是「水腫」，我的腳腫得像「麵龜」一樣，原本的鞋子都沒辦法穿，只能穿拖鞋。",
+          "醫生說是因為媽媽必需供應養份給胎兒，導致血流速度變慢，所以在末稍血液循環回流速度變慢，就形成水腫。",
+          "網路上說可以多抬腿或穿彈性襪來改善，我之後來試看看～"
+        ]
+      },
+      7: {
+        img: "syn7.png",
+        name: "抽筋",
+        lines: [
+          "昨天晚上睡睡睡然後突然整個腳突然很痛，我想說天哪，怎麼會抽筋的這麼嚴重這麼痛。",
+          "後來好不容易抽痛消失，我才上網查原因。",
+          "因為子宮擴大會對周圍肌肉和神經進行壓迫，體重增加和水腫也會增加下肢的壓力，經常會在半夜突然發作。",
+          "看來我得要好好拉伸和補鈣才行，不然再來一次我可受不了。"
+        ]
+      },
+      8: {
+        img: "syn8.png",
+        name: "妊娠紋",
+        lines: [
+          "本來以為自己皮膚彈性不錯，沒想到肚子開始出現淡淡的紅紋，而且皮膚變得又緊繃又乾癢，忍不住一直想抓！",
+          "醫生警告我不能抓，不然會更嚴重……。",
+          "即使我每天狂擦乳液、精油，還是擋不住紋路越來越多。",
+          "朋友安慰我說這是「媽媽的勳章」，但說真的，我一點都不想要這種紀念品！希望生完後能淡掉……"
+        ]
+      },
+      9: {
+        img: "syn9.png",
+        name: "疲勞嗜睡卻睡不好",
+        lines: [
+          "我懷孕後其中一個疲憊就是明明很累，躺下去就可以睡著，可是又非常難睡，因為肚子總有一個硬硬的球頂在那邊。",
+          "別人建議我以左側側睡比較好，但老實說我真的無法，因為睡久了會不舒服所以還是會換到右側。",
+          "正睡更可怕，會覺得整個人被泰山壓頂...真的很折磨人。"
+        ]
+      }
+    };
+
+    // 相近症狀配對：系統會抽一個作為平民症狀，再抽一個相近症狀作為臥底。
+    const PAIRS = {
+      1: [8, 9],
+      2: [9, 5],
+      3: [4, 9],
+      4: [3, 9],
+      5: [6, 7, 9],
+      6: [5, 7],
+      7: [5, 6],
+      8: [1, 6],
+      9: [2, 3, 5]
+    };
+
+    const appEl = document.getElementById("app");
+    const toastEl = document.getElementById("toast");
+
+    const sessionIdKey = "pregnancy-undercover-session-id";
+    const sessionId = localStorage.getItem(sessionIdKey) || crypto.randomUUID();
+    localStorage.setItem(sessionIdKey, sessionId);
+
+    const roomKey = "pregnancy-undercover-room";
+    let roomId = localStorage.getItem(roomKey) || "classroom";
+    let currentState = null;
+    let db = null;
+    let roomRef = null;
+    let unsubscribe = null;
+
+    let detailState = {
+      open: false,
+      synId: null,
+      lineIndex: 0,
+      isTyping: false,
+      fullText: "",
+      typedText: "",
+      timer: null
+    };
+
+    if (hasFirebaseConfig) {
+      const firebaseApp = initializeApp(firebaseConfig);
+      db = getDatabase(firebaseApp);
+    }
+
+    function emptyRoom() {
+      return {
+        phase: "lobby",
+        players: {},
+        game: null,
+        votes: {},
+        result: null,
+        updatedAt: Date.now()
+      };
+    }
+
+    function localStorageKeyForRoom() {
+      return "pregnancy-undercover-local-room-" + roomId;
+    }
+
+    function saveLocalState(state) {
+      localStorage.setItem(localStorageKeyForRoom(), JSON.stringify(state));
+      window.dispatchEvent(new Event("local-game-state-change"));
+    }
+
+    function readLocalState() {
+      const raw = localStorage.getItem(localStorageKeyForRoom());
+      if (!raw) return emptyRoom();
+      try {
+        return JSON.parse(raw);
+      } catch {
+        return emptyRoom();
+      }
+    }
+
+    function connectRoom(newRoomId = roomId) {
+      roomId = String(newRoomId || "classroom").trim() || "classroom";
+      localStorage.setItem(roomKey, roomId);
+
+      if (unsubscribe) {
+        unsubscribe();
+        unsubscribe = null;
+      }
+
+      if (hasFirebaseConfig) {
+        roomRef = ref(db, "pregnancy-undercover-rooms/" + safeRoomId(roomId));
+        runTransaction(roomRef, (current) => current || emptyRoom());
+        unsubscribe = onValue(roomRef, (snapshot) => {
+          currentState = snapshot.val() || emptyRoom();
+          repairMyPlayerIfNeeded();
+          render();
+        });
+      } else {
+        currentState = readLocalState();
+        repairMyPlayerIfNeeded();
+        render();
+        window.addEventListener("storage", handleLocalStorage);
+        window.addEventListener("local-game-state-change", handleLocalEvent);
+      }
+    }
+
+    function safeRoomId(value) {
+      return String(value).replace(/[.#$/\[\]]/g, "-").slice(0, 60) || "classroom";
+    }
+
+    function handleLocalStorage(e) {
+      if (e.key === localStorageKeyForRoom()) {
+        currentState = readLocalState();
+        repairMyPlayerIfNeeded();
+        render();
+      }
+    }
+
+    function handleLocalEvent() {
+      currentState = readLocalState();
+      repairMyPlayerIfNeeded();
+      render();
+    }
+
+    function getMyPlayer(state = currentState) {
+      const players = state?.players || {};
+      const found = Object.keys(players).find((n) => players[n]?.sessionId === sessionId);
+      return found || null;
+    }
+
+    function repairMyPlayerIfNeeded() {
+      const mine = getMyPlayer(currentState);
+      if (!mine) {
+        localStorage.removeItem("pregnancy-undercover-my-player-" + roomId);
+      } else {
+        localStorage.setItem("pregnancy-undercover-my-player-" + roomId, mine);
+      }
+    }
+
+    function playersCount(state = currentState) {
+      return Object.keys(state?.players || {}).length;
+    }
+
+    function randomItem(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function makeAssignment() {
+      const playerNums = ["1", "2", "3", "4"];
+      const civilianSynId = Number(randomItem(Object.keys(SYMPTOMS)));
+      const undercoverSynId = Number(randomItem(PAIRS[civilianSynId]));
+      const undercoverPlayer = randomItem(playerNums);
+
+      const cards = {};
+      playerNums.forEach((p) => {
+        const isUndercover = p === undercoverPlayer;
+        cards[p] = {
+          synId: isUndercover ? undercoverSynId : civilianSynId,
+          role: isUndercover ? "undercover" : "civilian"
+        };
+      });
+
+      return {
+        cards,
+        civilianSynId,
+        undercoverSynId,
+        undercoverPlayer,
+        createdAt: Date.now()
+      };
+    }
+
+    async function updateRoom(updater) {
+      if (hasFirebaseConfig) {
+        await runTransaction(roomRef, (current) => {
+          const base = current || emptyRoom();
+          const next = updater(structuredClone(base));
+          return next || base;
+        });
+      } else {
+        const current = readLocalState();
+        const next = updater(structuredClone(current)) || current;
+        saveLocalState(next);
+      }
+    }
+
+    async function selectPlayer(n) {
+      n = String(n);
+
+      if (hasFirebaseConfig) {
+        const pRef = ref(db, "pregnancy-undercover-rooms/" + safeRoomId(roomId) + "/players/" + n);
+        const result = await runTransaction(pRef, (current) => {
+          if (current && current.sessionId !== sessionId) return current;
+          return {
+            sessionId,
+            joinedAt: Date.now()
+          };
+        });
+
+        const chosen = result.snapshot.val();
+        if (!chosen || chosen.sessionId !== sessionId) {
+          showToast("這個 Player 已經被選走了");
+          return;
+        }
+      } else {
+        const state = readLocalState();
+        state.players = state.players || {};
+        if (state.players[n] && state.players[n].sessionId !== sessionId) {
+          showToast("這個 Player 已經被選走了");
+          return;
+        }
+        state.players[n] = { sessionId, joinedAt: Date.now() };
+        saveLocalState(state);
+      }
+
+      localStorage.setItem("pregnancy-undercover-my-player-" + roomId, n);
+      await startGameIfReady();
+      showToast("你已選擇 Player " + n);
+    }
+
+    async function exitMatch() {
+      const mine = getMyPlayer(currentState);
+      if (!mine) return;
+
+      if (currentState?.phase !== "lobby") {
+        showToast("遊戲已開始，不能退出匹配");
+        return;
+      }
+
+      const ok = confirm("確定要退出匹配嗎？退出後 Player " + mine + " 會重新開放。");
+      if (!ok) return;
+
+      if (hasFirebaseConfig) {
+        const pRef = ref(db, "pregnancy-undercover-rooms/" + safeRoomId(roomId) + "/players/" + mine);
+        await runTransaction(pRef, (current) => {
+          if (current && current.sessionId === sessionId) return null;
+          return current;
+        });
+      } else {
+        const state = readLocalState();
+        if (state.players?.[mine]?.sessionId === sessionId) {
+          delete state.players[mine];
+          saveLocalState(state);
+        }
+      }
+
+      localStorage.removeItem("pregnancy-undercover-my-player-" + roomId);
+      showToast("已退出匹配");
+    }
+
+    async function startGameIfReady() {
+      await updateRoom((state) => {
+        state.players = state.players || {};
+        const ready = Object.keys(state.players).length === 4;
+        if ((state.phase || "lobby") === "lobby" && ready) {
+          state.phase = "playing";
+          state.game = makeAssignment();
+          state.votes = {};
+          state.result = null;
+          state.updatedAt = Date.now();
+        }
+        return state;
+      });
+    }
+
+    async function startVoting() {
+      const ok = confirm("確定大家都描述完了，要開始票選嗎？");
+      if (!ok) return;
+
+      await updateRoom((state) => {
+        if (state.phase === "playing") {
+          state.phase = "voting";
+          state.votes = {};
+          state.result = null;
+          state.updatedAt = Date.now();
+        }
+        return state;
+      });
+    }
+
+    async function submitVote(target) {
+      const mine = getMyPlayer(currentState);
+      if (!mine) {
+        showToast("你不是玩家，不能投票");
+        return;
+      }
+
+      if (String(target) === String(mine)) {
+        showToast("不能投自己喔");
+        return;
+      }
+
+      await updateRoom((state) => {
+        if (state.phase !== "voting") return state;
+        state.votes = state.votes || {};
+        if (state.votes[mine]) return state;
+        state.votes[mine] = {
+          target: String(target),
+          at: Date.now()
+        };
+
+        if (Object.keys(state.votes).length === 4) {
+          state.result = computeResult(state.game, state.votes);
+          state.phase = "result";
+        }
+        state.updatedAt = Date.now();
+        return state;
+      });
+    }
+
+    function computeResult(game, votes) {
+      const counts = { "1": 0, "2": 0, "3": 0, "4": 0 };
+      Object.values(votes || {}).forEach((vote) => {
+        const target = String(vote.target || vote);
+        if (counts[target] !== undefined) counts[target] += 1;
+      });
+
+      const maxVotes = Math.max(...Object.values(counts));
+      const mostVoted = Object.keys(counts).filter((p) => counts[p] === maxVotes);
+      const undercoverPlayer = String(game.undercoverPlayer);
+      const undercoverVotes = counts[undercoverPlayer] || 0;
+
+      // 規則：只要臥底得票數為最高或並列最高，就算一般玩家成功抓到臥底。
+      const civiliansWin = undercoverVotes === maxVotes;
+
+      return {
+        counts,
+        maxVotes,
+        mostVoted,
+        undercoverPlayer,
+        undercoverVotes,
+        civiliansWin,
+        winnerText: civiliansWin ? "一般玩家勝利！臥底被抓到了" : "臥底勝利！大家投錯人了",
+        finishedAt: Date.now()
+      };
+    }
+
+    async function resetGame() {
+      const ok = confirm("確定要重新開始嗎？所有玩家會回到 Player 選擇畫面。");
+      if (!ok) return;
+
+      if (hasFirebaseConfig) {
+        await set(roomRef, emptyRoom());
+      } else {
+        saveLocalState(emptyRoom());
+      }
+
+      localStorage.removeItem("pregnancy-undercover-my-player-" + roomId);
+      showToast("已重新開始");
+    }
+
+    async function clearRoom() {
+      const ok = confirm("確定要清空這個房間嗎？適合在有人卡住或課堂重新開始時使用。");
+      if (!ok) return;
+      await resetGame();
+    }
+
+    function render() {
+      const state = currentState || emptyRoom();
+      const phase = state.phase || "lobby";
+      const mine = getMyPlayer(state);
+
+      appEl.innerHTML = `
+        <div class="topbar">
+          <div>
+            <h1 class="title">孕期症狀誰是臥底</h1>
+            <p class="subtitle">4位上台學生各拿一台平板。選好 Player 後，系統會同步發牌、閱讀資訊、投票與結算。</p>
+          </div>
+          <div class="pill">${phaseLabel(phase)}｜房間：${escapeHtml(roomId)}</div>
+        </div>
+        ${!hasFirebaseConfig ? `
+          <div class="warning">
+            目前是「單機預覽模式」：因為尚未填入 Firebase 設定，所以四台平板不會真正同步。填入 firebaseConfig 後即可跨裝置同步。
+          </div>
+        ` : ""}
+        ${renderRoomControl()}
+        ${renderPhase(state, phase, mine)}
+        ${detailState.open ? renderDialogue() : ""}
+      `;
+
+      bindEvents();
+      if (detailState.open && detailState.typedText === "" && !detailState.isTyping) {
+        startTypingCurrentLine();
+      }
+    }
+
+    function renderRoomControl() {
+      return `
+        <div class="panel" style="margin-bottom:14px; padding:16px;">
+          <div class="room-row" style="margin:0;">
+            <input id="roomInput" type="text" value="${escapeHtml(roomId)}" placeholder="輸入房間代碼，例如 classroom" />
+            <button class="btn secondary" data-action="connectRoom">切換房間</button>
+          </div>
+          <div class="small">四台平板請輸入同一個房間代碼。圖片檔請與 HTML 放同一資料夾：syn1.png～syn9.png。</div>
+        </div>
+      `;
+    }
+
+    function renderPhase(state, phase, mine) {
+      if (phase === "lobby") {
+        if (mine) return renderWaiting(state, mine);
+        return renderLobby(state);
+      }
+
+      if (phase === "playing") {
+        if (!mine) return renderObserver(state);
+        return renderPlaying(state, mine);
+      }
+
+      if (phase === "voting") {
+        if (!mine) return renderObserverVoting(state);
+        return renderVoting(state, mine);
+      }
+
+      if (phase === "result") {
+        return renderResult(state);
+      }
+
+      return renderLobby(state);
+    }
+
+    function renderLobby(state) {
+      const players = state.players || {};
+      return `
+        <div class="panel">
+          <h2 style="margin:0 0 8px; font-size:28px;">請選擇你的 Player</h2>
+          <p class="subtitle">被選走的 Player 會在所有平板上變暗，不能再點選。</p>
+          <div class="player-grid">
+            ${[1,2,3,4].map((n) => renderPlayerButton(n, players)).join("")}
+          </div>
+          <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn secondary" data-action="clearRoom">清空房間</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderPlayerButton(n, players) {
+      const occupied = !!players[String(n)];
+      const mine = occupied && players[String(n)]?.sessionId === sessionId;
+      const classes = [
+        "player-btn",
+        occupied ? "occupied disabled" : "",
+        mine ? "my-choice" : ""
+      ].join(" ");
+
+      return `
+        <button class="${classes}" data-action="selectPlayer" data-player="${n}" ${occupied ? "disabled" : ""}>
+          <div class="player-num">Player ${n}</div>
+          <div class="player-status">${occupied ? (mine ? "你已選擇" : "已被選走") : "可以選擇"}</div>
+        </button>
+      `;
+    }
+
+    function renderWaiting(state, mine) {
+      const count = playersCount(state);
+      return `
+        <button class="exit" data-action="exitMatch">退出</button>
+        <div class="panel big-center">
+          <div class="waiting-number">P${mine}</div>
+          <h2 style="margin:0; font-size:32px;">等待其他玩家加入...</h2>
+          <p class="subtitle">目前 ${count}/4 位玩家已完成匹配。四位都選好後，畫面會自動同步開始。</p>
+          <div class="progress-dots">
+            ${[1,2,3,4].map(i => `<span class="dot ${i <= count ? "on" : ""}"></span>`).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderPlaying(state, mine) {
+      const card = state.game?.cards?.[mine];
+      if (!card) return `<div class="panel">正在準備卡牌...</div>`;
+      const symptom = SYMPTOMS[card.synId];
+
+      return `
+        <div class="card-wrap">
+          ${renderSymptomCard(symptom, card.synId)}
+          <div class="info-box">
+            <div class="panel">
+              <h2 style="margin:0 0 10px; font-size:30px;">你是 Player ${mine}</h2>
+              <div class="hidden-role">
+                <b>遊戲提醒：</b><br>
+                你不會知道自己是不是臥底。請根據卡牌症狀進行描述，但不要直接說出症狀名稱。
+              </div>
+              <div class="notice">
+                建議描述順序：<br>
+                ① 身體感受　② 生活影響　③ 可能原因　④ 舒緩方式
+              </div>
+              <div class="action-area">
+                <button class="btn success" data-action="startVoting">大家都說完了，開始票選</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSymptomCard(symptom, synId) {
+      return `
+        <div class="symptom-card">
+          <div class="img-box">
+            <img src="${symptom.img}" alt="${escapeHtml(symptom.name)}" />
+            <div class="img-fallback">
+              <div style="font-size:26px;">找不到圖片</div>
+              <div style="font-size:20px; margin-top:8px;">${escapeHtml(symptom.img)}</div>
+              <div class="small" style="margin-top:12px;">請把圖片檔放在 HTML 同一資料夾</div>
+            </div>
+            <button class="magnifier" title="查看詳細資訊" data-action="openDetail" data-syn="${synId}">🔍</button>
+          </div>
+          <div class="symptom-name">${escapeHtml(symptom.name)}</div>
+        </div>
+      `;
+    }
+
+    function renderVoting(state, mine) {
+      const votes = state.votes || {};
+      const myVote = votes[mine]?.target;
+      const votedCount = Object.keys(votes).length;
+
+      return `
+        <div class="panel">
+          <h2 style="margin:0 0 8px; font-size:34px;">開始票選</h2>
+          <p class="subtitle">請選出你認為的臥底。每位玩家只能投一次，不能投自己。</p>
+          <div class="notice">目前已投票：${votedCount}/4</div>
+          ${myVote ? `
+            <div class="big-center" style="min-height:260px;">
+              <h2 style="font-size:32px; margin:0;">你已投給 Player ${myVote}</h2>
+              <p class="subtitle">等待其他玩家完成投票...</p>
+            </div>
+          ` : `
+            <div class="voting-grid">
+              ${[1,2,3,4].map((n) => `
+                <button class="btn vote-btn ${String(n) === String(mine) ? "secondary" : ""}" data-action="vote" data-target="${n}" ${String(n) === String(mine) ? "disabled" : ""}>
+                  Player ${n}
+                </button>
+              `).join("")}
+            </div>
+          `}
+        </div>
+      `;
+    }
+
+    function renderResult(state) {
+      const game = state.game;
+      const result = state.result || computeResult(game, state.votes || {});
+      const civilian = SYMPTOMS[game.civilianSynId];
+      const undercover = SYMPTOMS[game.undercoverSynId];
+
+      return `
+        <div class="panel">
+          <div class="winner">${escapeHtml(result.winnerText)}</div>
+          <p class="subtitle">
+            平民症狀：<b>${escapeHtml(civilian.name)}</b>　
+            臥底症狀：<b>${escapeHtml(undercover.name)}</b>　
+            臥底玩家：<b>Player ${game.undercoverPlayer}</b>
+          </p>
+
+          <table class="result-table">
+            ${[1,2,3,4].map((n) => `
+              <tr>
+                <td>Player ${n}</td>
+                <td>${result.counts?.[String(n)] || 0} 票 ${String(n) === String(game.undercoverPlayer) ? "（臥底）" : ""}</td>
+              </tr>
+            `).join("")}
+          </table>
+
+          <div class="notice">
+            規則：只要臥底得票數為最高或並列最高，就代表一般玩家成功抓到臥底。<br>
+            可以請學生說明：兩個症狀哪裡相似？哪裡不同？身邊的人可以怎麼支持孕婦？
+          </div>
+
+          <div class="action-area">
+            <button class="btn success" data-action="resetGame">重新開始</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderObserver(state) {
+      return `
+        <div class="panel big-center">
+          <h2 style="font-size:34px; margin:0;">遊戲已開始</h2>
+          <p class="subtitle">這台裝置沒有選擇 Player，因此目前是觀戰模式。</p>
+        </div>
+      `;
+    }
+
+    function renderObserverVoting(state) {
+      return `
+        <div class="panel big-center">
+          <h2 style="font-size:34px; margin:0;">正在票選</h2>
+          <p class="subtitle">這台裝置沒有選擇 Player，因此不能投票。</p>
+        </div>
+      `;
+    }
+
+    function renderDialogue() {
+      const symptom = SYMPTOMS[detailState.synId];
+      const current = detailState.lineIndex + 1;
+      const total = symptom.lines.length;
+
+      return `
+        <div class="dialogue-backdrop">
+          <div class="dialogue" data-action="nextDialogue">
+            <button class="close-x" data-action="closeDetail">×</button>
+            <div class="dialogue-title">${escapeHtml(symptom.name)}｜詳細資訊 ${current}/${total}</div>
+            <div id="dialogueText" class="dialogue-text">${escapeHtml(detailState.typedText)}</div>
+            <div class="dialogue-hint">點一下：${detailState.isTyping ? "立即顯示完整句子" : (current < total ? "下一句" : "已讀完，可按 X 退出")}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function phaseLabel(phase) {
+      return {
+        lobby: "選擇玩家",
+        playing: "發牌中",
+        voting: "票選中",
+        result: "結算"
+      }[phase] || "準備中";
+    }
+
+    function bindEvents() {
+      document.querySelectorAll("[data-action]").forEach((el) => {
+        const action = el.getAttribute("data-action");
+        el.addEventListener("click", (event) => {
+          if (action === "selectPlayer") selectPlayer(el.getAttribute("data-player"));
+          if (action === "exitMatch") exitMatch();
+          if (action === "connectRoom") {
+            const input = document.getElementById("roomInput");
+            connectRoom(input?.value || "classroom");
+          }
+          if (action === "startVoting") startVoting();
+          if (action === "vote") submitVote(el.getAttribute("data-target"));
+          if (action === "resetGame") resetGame();
+          if (action === "clearRoom") clearRoom();
+          if (action === "openDetail") {
+            event.stopPropagation();
+            openDetail(Number(el.getAttribute("data-syn")));
+          }
+          if (action === "closeDetail") {
+            event.stopPropagation();
+            closeDetail();
+          }
+          if (action === "nextDialogue") nextDialogue();
+        });
+      });
+
+      document.querySelectorAll(".img-box img").forEach((img) => {
+        img.addEventListener("error", () => {
+          img.style.display = "none";
+          const fallback = img.parentElement.querySelector(".img-fallback");
+          if (fallback) fallback.style.display = "flex";
+        });
+      });
+    }
+
+    function openDetail(synId) {
+      detailState.open = true;
+      detailState.synId = synId;
+      detailState.lineIndex = 0;
+      detailState.typedText = "";
+      detailState.fullText = "";
+      detailState.isTyping = false;
+      clearInterval(detailState.timer);
+      render();
+      startTypingCurrentLine();
+    }
+
+    function closeDetail() {
+      clearInterval(detailState.timer);
+      detailState = {
+        open: false,
+        synId: null,
+        lineIndex: 0,
+        isTyping: false,
+        fullText: "",
+        typedText: "",
+        timer: null
+      };
+      render();
+    }
+
+    function startTypingCurrentLine() {
+      if (!detailState.open) return;
+      const symptom = SYMPTOMS[detailState.synId];
+      const text = symptom.lines[detailState.lineIndex] || "";
+      detailState.fullText = text;
+      detailState.typedText = "";
+      detailState.isTyping = true;
+
+      const textEl = document.getElementById("dialogueText");
+      if (!textEl) return;
+
+      clearInterval(detailState.timer);
+      let i = 0;
+      detailState.timer = setInterval(() => {
+        i += 1;
+        detailState.typedText = text.slice(0, i);
+        textEl.textContent = detailState.typedText;
+
+        if (i >= text.length) {
+          clearInterval(detailState.timer);
+          detailState.isTyping = false;
+          const hint = document.querySelector(".dialogue-hint");
+          if (hint) {
+            const symptomNow = SYMPTOMS[detailState.synId];
+            const current = detailState.lineIndex + 1;
+            hint.textContent = "點一下：" + (current < symptomNow.lines.length ? "下一句" : "已讀完，可按 X 退出");
+          }
+        }
+      }, 38);
+    }
+
+    function nextDialogue() {
+      if (!detailState.open) return;
+
+      if (detailState.isTyping) {
+        clearInterval(detailState.timer);
+        detailState.isTyping = false;
+        detailState.typedText = detailState.fullText;
+        const textEl = document.getElementById("dialogueText");
+        if (textEl) textEl.textContent = detailState.typedText;
+        const hint = document.querySelector(".dialogue-hint");
+        const symptom = SYMPTOMS[detailState.synId];
+        const current = detailState.lineIndex + 1;
+        if (hint) hint.textContent = "點一下：" + (current < symptom.lines.length ? "下一句" : "已讀完，可按 X 退出");
+        return;
+      }
+
+      const symptom = SYMPTOMS[detailState.synId];
+      if (detailState.lineIndex < symptom.lines.length - 1) {
+        detailState.lineIndex += 1;
+        detailState.typedText = "";
+        render();
+        startTypingCurrentLine();
+      } else {
+        showToast("已讀完，按 X 可以退出");
+      }
+    }
+
+    function showToast(message) {
+      toastEl.textContent = message;
+      toastEl.classList.add("show");
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toastEl.classList.remove("show"), 1800);
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    connectRoom(roomId);
+  </script>
+</body>
+</html>
