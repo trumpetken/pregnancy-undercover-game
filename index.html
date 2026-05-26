@@ -1341,9 +1341,12 @@
         <div class="panel" style="margin-bottom:14px; padding:16px;">
           <div class="room-row" style="margin:0;">
             <input id="roomInput" type="text" value="${escapeHtml(roomId)}" placeholder="輸入房間代碼，例如 classroom" />
-            <button class="btn secondary" data-action="connectRoom">切換房間</button>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button class="btn secondary" data-action="connectRoom">切換房間</button>
+              <button class="btn secondary" data-action="openObserver">觀察者模式</button>
+            </div>
           </div>
-          <div class="small">四台平板請輸入同一個房間代碼。圖片檔請與 HTML 放同一資料夾：syn1.png～syn9.png。</div>
+          <div class="small">四台平板請輸入同一個房間代碼。圖片檔請與 HTML 放同一資料夾：syn1.png～syn9.png。遊戲開始後仍可切換到觀察者模式查看 9 張症狀牌卡。</div>
         </div>
       `;
     }
@@ -1637,6 +1640,7 @@
         <div class="panel big-center">
           <h2 style="font-size:34px; margin:0;">遊戲已開始</h2>
           <p class="subtitle">這台裝置沒有選擇 Player，因此目前是觀戰模式。</p>
+          <button class="btn secondary" data-action="openObserver">進入觀察者模式</button>
         </div>
       `;
     }
@@ -1646,6 +1650,7 @@
         <div class="panel big-center">
           <h2 style="font-size:34px; margin:0;">正在票選</h2>
           <p class="subtitle">這台裝置沒有選擇 Player，因此不能投票。</p>
+          <button class="btn secondary" data-action="openObserver">進入觀察者模式</button>
         </div>
       `;
     }
