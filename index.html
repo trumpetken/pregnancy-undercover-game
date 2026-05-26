@@ -647,12 +647,28 @@
     .observer-stage {
       display: flex;
       gap: 18px;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
       overflow-x: auto;
+      overflow-y: hidden;
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
-      padding: 18px max(18px, calc(50vw - 150px)) 28px;
-      margin: 8px -32px 0;
+      overscroll-behavior-x: contain;
+      padding: 18px max(18px, calc((100% - 300px) / 2)) 28px;
+      margin: 8px 0 0;
       scrollbar-width: none;
+      cursor: grab;
+      user-select: none;
+    }
+
+    .observer-stage.dragging {
+      cursor: grabbing;
+      scroll-snap-type: none;
+    }
+
+    .observer-stage.dragging * {
+      cursor: grabbing;
     }
 
     .observer-stage::-webkit-scrollbar {
@@ -745,10 +761,10 @@
       }
 
       .observer-stage {
-        margin-left: -18px;
-        margin-right: -18px;
-        padding-left: calc(50vw - 150px);
-        padding-right: calc(50vw - 150px);
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: max(18px, calc((100% - 300px) / 2));
+        padding-right: max(18px, calc((100% - 300px) / 2));
       }
 
       .observer-card {
@@ -1705,6 +1721,66 @@
           const fallback = img.parentElement.querySelector(".img-fallback");
           if (fallback) fallback.style.display = "flex";
         });
+      });
+
+      enableMouseDragScroll();
+    }
+
+    function enableMouseDragScroll() {
+      document.querySelectorAll(".observer-stage").forEach((stage) => {
+        let isDown = false;
+        let startX = 0;
+        let startScrollLeft = 0;
+        let moved = false;
+        let suppressClick = false;
+
+        stage.addEventListener("pointerdown", (event) => {
+          if (event.target.closest("button")) return;
+
+          isDown = true;
+          moved = false;
+          startX = event.clientX;
+          startScrollLeft = stage.scrollLeft;
+          stage.classList.add("dragging");
+          stage.setPointerCapture?.(event.pointerId);
+        });
+
+        stage.addEventListener("pointermove", (event) => {
+          if (!isDown) return;
+
+          const dx = event.clientX - startX;
+          if (Math.abs(dx) > 4) {
+            moved = true;
+            suppressClick = true;
+          }
+
+          stage.scrollLeft = startScrollLeft - dx;
+        });
+
+        const endDrag = (event) => {
+          if (!isDown) return;
+
+          isDown = false;
+          stage.classList.remove("dragging");
+          stage.releasePointerCapture?.(event.pointerId);
+
+          if (moved) {
+            setTimeout(() => {
+              suppressClick = false;
+            }, 80);
+          }
+        };
+
+        stage.addEventListener("pointerup", endDrag);
+        stage.addEventListener("pointercancel", endDrag);
+        stage.addEventListener("pointerleave", endDrag);
+
+        stage.addEventListener("click", (event) => {
+          if (!suppressClick) return;
+          if (event.target.closest("button")) return;
+          event.preventDefault();
+          event.stopPropagation();
+        }, true);
       });
     }
 
