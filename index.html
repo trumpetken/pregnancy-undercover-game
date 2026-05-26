@@ -447,7 +447,6 @@
       color: var(--primary-dark);
       font-size: 24px;
       margin-bottom: 12px;
-      padding-right: 52px;
     }
 
     .dialogue-text {
@@ -519,6 +518,203 @@
       bottom: 28px;
     }
 
+
+    /* Result reveal cards */
+    .result-card-sections {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 14px;
+      margin: 18px 0;
+    }
+
+    .result-role-section {
+      background: rgba(255,255,255,.70);
+      border: 1px solid rgba(251, 146, 60, .26);
+      border-radius: 24px;
+      padding: 14px;
+    }
+
+    .result-role-title {
+      margin: 0 0 12px;
+      font-size: 20px;
+      color: var(--primary-dark);
+      font-weight: 1000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .result-role-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+      gap: 12px;
+    }
+
+    .result-player-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 220px;
+      border-radius: 22px;
+      background: #fff;
+      border: 2px solid rgba(251, 146, 60, .36);
+      box-shadow: 0 12px 26px rgba(124, 45, 18, .12);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .result-player-card.undercover {
+      border-color: rgba(220, 38, 38, .48);
+      box-shadow: 0 12px 26px rgba(220, 38, 38, .12);
+    }
+
+    .result-card-img {
+      position: relative;
+      height: 150px;
+      background: #fff7ed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .result-card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 8px;
+    }
+
+    .result-zoom {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      border: 0;
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.94);
+      color: var(--primary-dark);
+      font-size: 22px;
+      font-weight: 1000;
+      box-shadow: 0 8px 18px rgba(124, 45, 18, .18);
+      cursor: pointer;
+    }
+
+    .result-card-body {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-start;
+    }
+
+    .result-player-name {
+      font-size: 18px;
+      font-weight: 1000;
+      color: var(--text);
+    }
+
+    .result-symptom-name {
+      font-size: 16px;
+      font-weight: 950;
+      color: var(--primary-dark);
+    }
+
+    .role-badge {
+      display: inline-flex;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 13px;
+      font-weight: 1000;
+      color: #fff;
+      background: var(--success);
+    }
+
+    .role-badge.undercover {
+      background: var(--danger);
+    }
+
+    /* Observer mode card swiper */
+    .observer-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .observer-stage {
+      display: flex;
+      gap: 18px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding: 18px max(18px, calc(50vw - 150px)) 28px;
+      margin: 8px -32px 0;
+      scrollbar-width: none;
+    }
+
+    .observer-stage::-webkit-scrollbar {
+      display: none;
+    }
+
+    .observer-card {
+      flex: 0 0 300px;
+      scroll-snap-align: center;
+      position: relative;
+      overflow: hidden;
+      min-height: 500px;
+      border-radius: 30px;
+      background: linear-gradient(180deg, #fff, #ffedd5);
+      border: 3px solid rgba(251, 146, 60, .38);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .observer-card-img {
+      position: relative;
+      flex: 1;
+      min-height: 370px;
+      background: #fff7ed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .observer-card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 12px;
+    }
+
+    .observer-card-name {
+      padding: 18px;
+      text-align: center;
+      font-size: 28px;
+      font-weight: 1000;
+      color: var(--primary-dark);
+    }
+
+    .observer-zoom {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      border: 0;
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.94);
+      color: var(--primary-dark);
+      font-size: 28px;
+      font-weight: 1000;
+      box-shadow: 0 10px 26px rgba(124, 45, 18, .2);
+      cursor: pointer;
+      z-index: 3;
+    }
+
     @media (max-width: 780px) {
       .topbar {
         flex-direction: column;
@@ -543,6 +739,23 @@
       .room-row {
         grid-template-columns: 1fr;
       }
+
+      .result-card-sections {
+        grid-template-columns: 1fr;
+      }
+
+      .observer-stage {
+        margin-left: -18px;
+        margin-right: -18px;
+        padding-left: calc(50vw - 150px);
+        padding-right: calc(50vw - 150px);
+      }
+
+      .observer-card {
+        flex-basis: 300px;
+        min-height: 480px;
+      }
+
     }
   </style>
 </head>
@@ -712,6 +925,8 @@
       typedText: "",
       timer: null
     };
+
+    let observerMode = false;
 
     if (hasFirebaseConfig) {
       const firebaseApp = initializeApp(firebaseConfig);
@@ -1079,6 +1294,7 @@
       const state = currentState || emptyRoom();
       const phase = state.phase || "lobby";
       const mine = getMyPlayer(state);
+      const displayPhase = observerMode ? "觀察者模式" : phaseLabel(phase);
 
       appEl.innerHTML = `
         <div class="topbar">
@@ -1086,15 +1302,15 @@
             <h1 class="title">孕期症狀誰是臥底</h1>
             <p class="subtitle">4位上台學生各拿一台平板。選好 Player 後，系統會同步發牌、閱讀資訊、投票與結算。</p>
           </div>
-          <div class="pill">${phaseLabel(phase)}｜房間：${escapeHtml(roomId)}</div>
+          <div class="pill">${displayPhase}｜房間：${escapeHtml(roomId)}</div>
         </div>
         ${!hasFirebaseConfig ? `
           <div class="warning">
             目前是「單機預覽模式」：因為尚未填入 Firebase 設定，所以四台平板不會真正同步。填入 firebaseConfig 後即可跨裝置同步。
           </div>
         ` : ""}
-        ${renderRoomControl()}
-        ${renderPhase(state, phase, mine)}
+        ${observerMode ? "" : renderRoomControl()}
+        ${observerMode ? renderObserverCatalog(state) : renderPhase(state, phase, mine)}
         ${detailState.open ? renderDialogue() : ""}
       `;
 
@@ -1150,6 +1366,7 @@
             ${[1,2,3,4].map((n) => renderPlayerButton(n, players)).join("")}
           </div>
           <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn secondary" data-action="openObserver">觀察者模式</button>
             <button class="btn secondary" data-action="clearRoom">清空房間</button>
           </div>
         </div>
@@ -1167,6 +1384,37 @@
         <div class="notice" style="margin-top:14px;">
           <b>出題規則：</b>${nextMessage}<br>
           <span class="small">重新開始會保留出題紀錄；清空房間才會把紀錄歸零。臥底題目仍會依相近症狀隨機搭配。</span>
+        </div>
+      `;
+    }
+
+
+    function renderObserverCatalog(state) {
+      return `
+        <div class="panel">
+          <div class="observer-toolbar">
+            <div>
+              <h2 style="margin:0 0 8px; font-size:30px;">觀察者模式</h2>
+              <p class="subtitle">左右滑動查看 9 張症狀牌卡；點放大鏡可以閱讀逐句詳細資訊。觀察者不會佔用 Player 名額。</p>
+            </div>
+            <button class="btn secondary" data-action="exitObserver">回到主畫面</button>
+          </div>
+          <div class="observer-stage">
+            ${allSymptomIds().map((id) => renderObserverCard(id)).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderObserverCard(synId) {
+      const symptom = SYMPTOMS[synId];
+      return `
+        <div class="observer-card">
+          <div class="observer-card-img">
+            <img src="${symptom.img}" alt="${escapeHtml(symptom.name)}" />
+            <button class="observer-zoom" title="查看詳細資訊" data-action="openDetail" data-syn="${synId}">🔍</button>
+          </div>
+          <div class="observer-card-name">${escapeHtml(symptom.name)}</div>
         </div>
       `;
     }
@@ -1291,6 +1539,8 @@
             臥底玩家：<b>Player ${game.undercoverPlayer}</b>
           </p>
 
+          ${renderResultPlayerCards(game, result)}
+
           <table class="result-table">
             ${[1,2,3,4].map((n) => `
               <tr>
@@ -1309,6 +1559,58 @@
 
           <div class="action-area">
             <button class="btn success" data-action="resetGame">重新開始</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderResultPlayerCards(game, result) {
+      const entries = [1,2,3,4].map((n) => {
+        const card = game.cards?.[String(n)];
+        return {
+          player: String(n),
+          card,
+          symptom: SYMPTOMS[card?.synId],
+          role: card?.role || (String(n) === String(game.undercoverPlayer) ? "undercover" : "civilian")
+        };
+      });
+
+      const civilians = entries.filter((entry) => entry.role !== "undercover");
+      const undercover = entries.filter((entry) => entry.role === "undercover");
+
+      return `
+        <div class="result-card-sections">
+          <div class="result-role-section">
+            <h3 class="result-role-title">👥 平民玩家拿到的牌卡</h3>
+            <div class="result-role-grid">
+              ${civilians.map((entry) => renderOneResultPlayerCard(entry, result)).join("")}
+            </div>
+          </div>
+          <div class="result-role-section">
+            <h3 class="result-role-title">🕵️ 臥底玩家拿到的牌卡</h3>
+            <div class="result-role-grid">
+              ${undercover.map((entry) => renderOneResultPlayerCard(entry, result)).join("")}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderOneResultPlayerCard(entry, result) {
+      if (!entry.card || !entry.symptom) return "";
+      const isUndercover = entry.role === "undercover";
+      const votes = result.counts?.[entry.player] || 0;
+      return `
+        <div class="result-player-card ${isUndercover ? "undercover" : "civilian"}">
+          <div class="result-card-img">
+            <img src="${entry.symptom.img}" alt="${escapeHtml(entry.symptom.name)}" />
+            <button class="result-zoom" title="查看詳細資訊" data-action="openDetail" data-syn="${entry.card.synId}">🔍</button>
+          </div>
+          <div class="result-card-body">
+            <span class="role-badge ${isUndercover ? "undercover" : "civilian"}">${isUndercover ? "臥底" : "平民"}</span>
+            <div class="result-player-name">Player ${entry.player}</div>
+            <div class="result-symptom-name">${escapeHtml(entry.symptom.name)}</div>
+            <div class="small">被投 ${votes} 票</div>
           </div>
         </div>
       `;
@@ -1346,10 +1648,9 @@
       return `
         <div class="dialogue-backdrop">
           <div class="dialogue" data-action="nextDialogue">
-            <button class="close-x" data-action="closeDetail">×</button>
             <div class="dialogue-title">${escapeHtml(symptom.name)}｜詳細資訊 ${current}/${total}</div>
             <div id="dialogueText" class="dialogue-text">${escapeHtml(detailState.typedText)}</div>
-            <div class="dialogue-hint">點一下：${detailState.isTyping ? "立即顯示完整句子" : (current < total ? "下一句" : "已讀完，可按 X 退出")}</div>
+            <div class="dialogue-hint">點一下：${detailState.isTyping ? "立即顯示完整句子" : (current < total ? "下一句" : "已讀完，再點一下即可退出詳細資訊")}</div>
           </div>
         </div>
       `;
@@ -1378,6 +1679,14 @@
           if (action === "vote") submitVote(el.getAttribute("data-target"));
           if (action === "resetGame") resetGame();
           if (action === "clearRoom") clearRoom();
+          if (action === "openObserver") {
+            observerMode = true;
+            render();
+          }
+          if (action === "exitObserver") {
+            observerMode = false;
+            render();
+          }
           if (action === "openDetail") {
             event.stopPropagation();
             openDetail(Number(el.getAttribute("data-syn")));
@@ -1450,7 +1759,7 @@
           if (hint) {
             const symptomNow = SYMPTOMS[detailState.synId];
             const current = detailState.lineIndex + 1;
-            hint.textContent = "點一下：" + (current < symptomNow.lines.length ? "下一句" : "已讀完，可按 X 退出");
+            hint.textContent = "點一下：" + (current < symptomNow.lines.length ? "下一句" : "已讀完，再點一下即可退出詳細資訊");
           }
         }
       }, 38);
@@ -1468,7 +1777,7 @@
         const hint = document.querySelector(".dialogue-hint");
         const symptom = SYMPTOMS[detailState.synId];
         const current = detailState.lineIndex + 1;
-        if (hint) hint.textContent = "點一下：" + (current < symptom.lines.length ? "下一句" : "已讀完，可按 X 退出");
+        if (hint) hint.textContent = "點一下：" + (current < symptom.lines.length ? "下一句" : "已讀完，再點一下即可退出詳細資訊");
         return;
       }
 
@@ -1479,7 +1788,7 @@
         render();
         startTypingCurrentLine();
       } else {
-        showToast("已讀完，按 X 可以退出");
+        closeDetail();
       }
     }
 
