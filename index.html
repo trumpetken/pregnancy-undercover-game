@@ -518,6 +518,26 @@
       bottom: 28px;
     }
 
+    .force-reset-btn {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 9999;
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 16px;
+      background: #7f1d1d;
+      color: #fff;
+      font-weight: 1000;
+      font-size: 15px;
+      box-shadow: 0 14px 32px rgba(127, 29, 29, .28);
+      cursor: pointer;
+    }
+
+    .force-reset-btn:active {
+      transform: scale(.96);
+    }
+
 
     /* Result reveal cards */
     .result-card-sections {
@@ -1306,6 +1326,30 @@
       showToast("已清空房間與出題紀錄");
     }
 
+    async function forceResetRoom() {
+      const password = prompt("請輸入教師密碼，才能強制重置目前房間。");
+      if (password === null) return;
+
+      if (password !== "0717") {
+        alert("密碼錯誤，無法強制重置。");
+        return;
+      }
+
+      const ok = confirm("確定要強制重置目前房間嗎？\n\n這會清除目前房間的所有玩家、卡牌、投票、結算，以及已出過題目的紀錄。所有裝置會回到選擇 Player 的畫面。");
+      if (!ok) return;
+
+      if (hasFirebaseConfig) {
+        await set(roomRef, emptyRoom());
+      } else {
+        saveLocalState(emptyRoom());
+      }
+
+      observerMode = false;
+      closeDetail();
+      localStorage.removeItem("pregnancy-undercover-my-player-" + roomId);
+      showToast("已強制重置房間");
+    }
+
     function render() {
       const state = currentState || emptyRoom();
       const phase = state.phase || "lobby";
@@ -1313,6 +1357,7 @@
       const displayPhase = observerMode ? "觀察者模式" : phaseLabel(phase);
 
       appEl.innerHTML = `
+        <button class="force-reset-btn" data-action="forceResetRoom">強制重置房間</button>
         <div class="topbar">
           <div>
             <h1 class="title">孕期症狀誰是臥底</h1>
@@ -1700,6 +1745,7 @@
           if (action === "vote") submitVote(el.getAttribute("data-target"));
           if (action === "resetGame") resetGame();
           if (action === "clearRoom") clearRoom();
+          if (action === "forceResetRoom") forceResetRoom();
           if (action === "openObserver") {
             observerMode = true;
             render();
